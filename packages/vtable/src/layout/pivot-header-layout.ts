@@ -2207,6 +2207,13 @@ export class PivotHeaderLayoutMap implements LayoutMapAPI {
   //   return { start: { col: 0, row: 0 }, end: { col: 0, row: 0 } };
   // }
 
+  /**
+   * getCellHeaderPathsWithTreeNode
+   * @description 获取单元格维度树路径，避免额外扫描合并范围缓存。
+   * @author baoyujie <nolan8192@outlook.com>
+   * @example
+   * layoutMap.getCellHeaderPathsWithTreeNode(col, row)
+   */
   getCellHeaderPathsWithTreeNode(col: number, row: number): IPivotTableCellHeaderPaths {
     // if (this._CellHeaderPathMap.has(`$${col}$${row}`))
     // if (this._CellHeaderPathMap.has(`${col}-${row}`)) {
@@ -2216,24 +2223,10 @@ export class PivotHeaderLayoutMap implements LayoutMapAPI {
     //   return this._lastCellHeaderPath;
     // }
 
-    let _largeCellRangeCacheIndex = -1;
-    for (let i = 0; i < this._largeCellRangeCache.length; i++) {
-      const range = this._largeCellRangeCache[i];
-      if (col >= range.start.col && col <= range.end.col && row >= range.start.row && row <= range.end.row) {
-        _largeCellRangeCacheIndex = i;
-        break;
-      }
-    }
-
+    // 维度路径只依赖表头 ID 和路径缓存，不扫描与结果无关的合并区间。
     let colPath: ITreeLayoutHeadNode[] = this.getColHeaderPathCache(col, row);
     let rowPath: ITreeLayoutHeadNode[] = this.getRowHeaderPathCache(col, row);
 
-    // if (_largeCellRangeCacheIndex !== -1) {
-    //   const range = this._largeCellRangeCache[_largeCellRangeCacheIndex];
-    //   if (this._CellHeaderPathMap.has(`${range.start.col}-${range.start.row}`)) {
-    //     return this._CellHeaderPathMap.get(`${range.start.col}-${range.start.row}`);
-    //   }
-    // }
     // console.log(`${col}-${row}`);
     const recordCol = this.getBodyIndexByCol(col);
     const recordRow = this.getBodyIndexByRow(row) + this.currentPageStartIndex;

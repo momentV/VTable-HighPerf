@@ -54,6 +54,13 @@ export function diffCellAddress(
   };
 }
 
+/**
+ * diffCellAddressForGridTree
+ * @description 在线性成员查询开销下计算 grid-tree 行折叠前后的单元格地址差异。
+ * @author baoyujie <nolan8192@outlook.com>
+ * @example
+ * diffCellAddressForGridTree(col, row, oldIds, newIds, oldPositions, layout)
+ */
 export function diffCellAddressForGridTree(
   col: number,
   row: number,
@@ -69,15 +76,17 @@ export function diffCellAddressForGridTree(
   const addCellPositionsRowDirection = [];
   const removeCellPositionsRowDirection = [];
   // const updateCellIds: Set<LayoutObjectId> = new Set();
-  // diff two array elements
+  // 用集合判断成员归属，保留原数组遍历以维持地址顺序和重复项语义。
+  const oldCellIdSet = new Set(oldCellIds);
+  const newCellIdSet = new Set(newCellIds);
   for (let i = 0; i < oldCellIds.length; i++) {
-    if (!newCellIds.includes(oldCellIds[i])) {
+    if (!newCellIdSet.has(oldCellIds[i])) {
       // updateCellIds.add(layout.getParentCellId(oldRowHeaderCellPositons[i].col, oldRowHeaderCellPositons[i].row));
       removeCellPositionsRowDirection.push(oldRowHeaderCellPositons[i]);
     }
   }
   for (let i = 0; i < newCellIds.length; i++) {
-    if (!oldCellIds.includes(newCellIds[i])) {
+    if (!oldCellIdSet.has(newCellIds[i])) {
       const newCellAddr = { col, row: columnHeaderStart + i }; // layout.getHeaderCellAdressById(newCellIds[i]);
       // updateCellIds.add(layout.getParentCellId(newCellAddr.col, newCellAddr.row));
       addCellPositionsRowDirection.push(newCellAddr);

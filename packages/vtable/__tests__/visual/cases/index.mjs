@@ -1,5 +1,6 @@
 /** 唯一可执行清单；bundles 指定每例需要的本地构建产物。 */
 export const cases = [
+  { id: 'pivot-row-dimensions-low-risk', purpose: '六维行头真实滚动及折叠展开保持数据结果', file: './pivot/row-dimensions-low-risk.mjs', bundles: ['vtable'] },
   { id: 'list-basic', purpose: '列表表头、固定数据与单元格绘制', file: './table/list-basic.mjs', bundles: ['vtable'] },
   { id: 'list-select-cell', purpose: '点击单元格后选择范围确实改变', file: './table/list-select-cell.mjs', bundles: ['vtable'] },
   { id: 'pivot-analysis-two-level', purpose: '两级维度与双指标透视数据分析', file: './pivot/analysis-two-level.mjs', bundles: ['vtable'] },
